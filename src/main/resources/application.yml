@@ -1,0 +1,108 @@
+
+
+server:
+  port: 8000
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      default-filters:
+        - name: "CustomGlobalFilter"
+          args:
+            logging: "true"
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+      routes:
+        - id: auth-service
+          uri: "lb://AUTH-SERVICE"
+          predicates:
+            - Path=/api/v1/auth/**
+        - id: product-service
+          uri: "lb://PRODUCT-SERVICE"
+          predicates:
+            - Path=/api/v1/product/**
+        - id: payment-service
+          uri: "lb://PAYMENT-SERVICE"
+          predicates:
+            - Path=/api/v1/payment/**
+        - id: avatar-service
+          uri: "lb://AVATAR-SERVICE"
+          predicates:
+            - Path=/api/v1/avatar/**
+          filters:
+            - name: "TokenFilter"
+              args:
+                logging: false
+        - id: follow-service
+          uri: "lb://FOLLOW-SERVICE"
+          predicates:
+            - Path=/api/v1/follow/**
+          filters:
+            - name: "TokenFilter"
+              args:
+                logging: false
+        - id: comments-service
+          uri: "lb://COMMENTS-SERVICE"
+          predicates:
+            - Path=/api/v1/comments/**
+          filters:
+            - name: "TokenFilter"
+              args:
+                logging: false
+        - id: like-service
+          uri: "lb://LIKE-SERVICE"
+          predicates:
+            - Path=/api/v1/like/**
+          filters:
+            - name: "TokenFilter"
+              args:
+                logging: false
+        - id: posts-service
+          uri: "lb://POSTS-SERVICE"
+          predicates:
+            - Path=/api/v1/posts/**
+          filters:
+            - name: "TokenFilter"
+              args:
+                logging: false
+        - id: scrap-service
+          uri: "lb://SCRAP-SERVICE"
+          predicates:
+            - Path=/api/v1/scrap/**
+          filters:
+            - name: "TokenFilter"
+              args:
+                logging: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,beans,refresh
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.0.184:8761/eureka
+
+  instance:
+    instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
+
+
+
+
+
+
+
+
