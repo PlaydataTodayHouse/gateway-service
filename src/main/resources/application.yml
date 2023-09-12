@@ -94,10 +94,14 @@ management:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://192.168.0.184:8761/eureka
+      defaultZone: http://192.168.0.221:8761/eureka
 
   instance:
     instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
+
+    logging:
+      level:
+        root=DEBUG:
 
 
 
